@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using FinanceDashboardApi.Interface;
 using FinanceDashboardApi.Models;
+using finance_dashboard_api.Models;
 
 namespace sample_app_api.Controllers
 {
     [ApiController]
-    [Route("Transactions/")]
+    [Route("transactions/")]
     public class TransactionController : ControllerBase
     {
         public ITransactionService _transactionService;
@@ -38,10 +39,21 @@ namespace sample_app_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Transaction>> AddTransaction([FromBody] Transaction transaction)
+        public async Task<ActionResult<List<Transaction>>> AddTransaction([FromBody] Transaction transaction)
         {
             var result = await _transactionService.AddTransactionAsync(transaction);
             if (transaction == null || result == null) 
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("filteredTransactions")]
+        public async Task<ActionResult<List<TransactionFilterResponse>>> GetFilteredTransactions([FromBody] TransactionFilterDto filter)
+        {
+            var result = await _transactionService.GetFilteredTransactions(filter);
+            if (filter == null || result == null)
             {
                 return BadRequest();
             }

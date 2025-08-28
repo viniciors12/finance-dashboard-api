@@ -1,4 +1,5 @@
-﻿using FinanceDashboardApi.Models;
+﻿using finance_dashboard_api.Models;
+using FinanceDashboardApi.Models;
 
 namespace FinanceDashboardApi.Interface
 {
@@ -6,7 +7,8 @@ namespace FinanceDashboardApi.Interface
     {
         Task<IEnumerable<Transaction>> GetAllTransactionsAsync();
         Task<Transaction> GetTransactionAsync(int id);
-        Task<Transaction> AddTransactionAsync(Transaction transaction);
+        Task<List<Transaction>> AddTransactionAsync(Transaction transaction);
+        Task<List<TransactionFilterResponse>> GetFilteredTransactions(TransactionFilterDto transactionFilter);
         Task<Transaction> UpdateTransactionAsync(Transaction transaction);
         Task DeleteTransactionAsync(int transactionId);
     }

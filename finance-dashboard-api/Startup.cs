@@ -3,6 +3,7 @@ using FinanceDashboardApi.Service;
 using FinanceDashboardApi.DBContext;
 using Microsoft.EntityFrameworkCore;
 using finance_dashboard_api.Repository;
+using finance_dashboard_api.Interface;
 
 namespace FinanceDashboardApi
 {
@@ -24,6 +25,16 @@ namespace FinanceDashboardApi
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -37,6 +48,7 @@ namespace FinanceDashboardApi
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.UseRouting();
+            app.UseCors("AllowFrontend");
 
             app.UseEndpoints(endpoints =>
             {

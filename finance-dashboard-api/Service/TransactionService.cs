@@ -1,4 +1,5 @@
-﻿using finance_dashboard_api.Repository;
+﻿using finance_dashboard_api.Interface;
+using finance_dashboard_api.Models;
 using FinanceDashboardApi.DBContext;
 using FinanceDashboardApi.Interface;
 using FinanceDashboardApi.Models;
@@ -30,9 +31,14 @@ namespace FinanceDashboardApi.Service
             return result;
         }
 
-        public async Task<Transaction> AddTransactionAsync(Transaction transaction)
+        public async Task<List<Transaction>> AddTransactionAsync(Transaction transaction)
         {
             return await _repository.AddTransactionAsync(transaction);
+        }
+
+        public async Task<List<TransactionFilterResponse>> GetFilteredTransactions(TransactionFilterDto transactionFilter)
+        {
+            return await _repository.GetFilteredTransactions(transactionFilter);
         }
 
         public async Task<Transaction> UpdateTransactionAsync(Transaction transaction)

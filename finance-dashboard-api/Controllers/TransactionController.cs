@@ -71,9 +71,9 @@ namespace sample_app_api.Controllers
         }
 
         [HttpDelete("{transactionId}")]
-        public async Task DeleteTransaction(int transactionId)
+        public async Task<ActionResult<List<Transaction>>> DeleteTransaction(int transactionId)
         {
-            await _transactionService.DeleteTransactionAsync(transactionId);
+           return await _transactionService.DeleteTransactionAsync(transactionId);
         }
     }
 }

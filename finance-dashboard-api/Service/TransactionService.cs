@@ -59,7 +59,7 @@ namespace FinanceDashboardApi.Service
             return record;
         }
 
-        public async Task DeleteTransactionAsync(int transactionId)
+        public async Task<List<Transaction>> DeleteTransactionAsync(int transactionId)
         {
             var record = await _repository.GetTransactionByIdAsync(transactionId);
             if (record == null)
@@ -67,7 +67,7 @@ namespace FinanceDashboardApi.Service
                 throw new Exception("Not Found"); //TODO: Make proper error handling
             }
 
-            await _repository.DeleteTransactionAsync(record);
+            return await _repository.DeleteTransactionAsync(record);
         }
     }
 }

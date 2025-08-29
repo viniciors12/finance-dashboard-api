@@ -10,6 +10,6 @@ namespace FinanceDashboardApi.Interface
         Task<List<Transaction>> AddTransactionAsync(Transaction transaction);
         Task<List<TransactionFilterResponse>> GetFilteredTransactions(TransactionFilterDto transactionFilter);
         Task<Transaction> UpdateTransactionAsync(Transaction transaction);
-        Task DeleteTransactionAsync(int transactionId);
+        Task<List<Transaction>> DeleteTransactionAsync(int transactionId);
     }
 }

@@ -66,10 +66,12 @@ namespace finance_dashboard_api.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteTransactionAsync(Transaction transaction)
+        public async Task<List<Transaction>> DeleteTransactionAsync(Transaction transaction)
         {
             _context.Transactions.Remove(transaction);
             await _context.SaveChangesAsync();
+            var transactions = await _context.Transactions.ToListAsync();
+            return transactions;
         }
     }
 }

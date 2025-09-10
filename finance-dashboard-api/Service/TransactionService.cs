@@ -1,17 +1,14 @@
 ﻿using finance_dashboard_api.Interface;
 using finance_dashboard_api.Models;
-using FinanceDashboardApi.DBContext;
 using FinanceDashboardApi.Interface;
 using FinanceDashboardApi.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinanceDashboardApi.Service
 {
     public class TransactionService : ITransactionService
     {
-        private readonly ITransactionRepository _repository;
-        public TransactionService(ITransactionRepository repository) 
+        private readonly ITransactionDynamoDB _repository;
+        public TransactionService(ITransactionDynamoDB repository) 
         {
             _repository = repository;
         }
@@ -21,7 +18,7 @@ namespace FinanceDashboardApi.Service
             return await _repository.GetAllTransactionsAsync();
         }
 
-        public async Task<Transaction> GetTransactionAsync(int id)
+        public async Task<Transaction> GetTransactionAsync(Guid id)
         {
             var result = await _repository.GetTransactionByIdAsync(id);
             if (result == null) 
@@ -31,7 +28,7 @@ namespace FinanceDashboardApi.Service
             return result;
         }
 
-        public async Task<List<Transaction>> AddTransactionAsync(Transaction transaction)
+        public async Task<Transaction> AddTransactionAsync(Transaction transaction)
         {
             return await _repository.AddTransactionAsync(transaction);
         }
@@ -59,7 +56,7 @@ namespace FinanceDashboardApi.Service
             return record;
         }
 
-        public async Task<List<Transaction>> DeleteTransactionAsync(int transactionId)
+        public async Task<Transaction> DeleteTransactionAsync(Guid transactionId)
         {
             var record = await _repository.GetTransactionByIdAsync(transactionId);
             if (record == null)

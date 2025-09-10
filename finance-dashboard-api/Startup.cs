@@ -4,6 +4,8 @@ using FinanceDashboardApi.DBContext;
 using Microsoft.EntityFrameworkCore;
 using finance_dashboard_api.Repository;
 using finance_dashboard_api.Interface;
+using Amazon.DynamoDBv2;
+using Amazon;
 
 namespace FinanceDashboardApi
 {
@@ -17,6 +19,17 @@ namespace FinanceDashboardApi
 
         public void ConfigureServices(IServiceCollection services) 
         {
+            services.AddSingleton<IAmazonDynamoDB>(sp =>
+            {
+                var config = new AmazonDynamoDBConfig
+                {
+                    RegionEndpoint = RegionEndpoint.USEast2
+                };
+                return new AmazonDynamoDBClient(config);
+            });
+
+            services.AddScoped<ITransactionDynamoDB, TransactionDynamoDB>();
+
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddDbContext<FinanceDBContext>(options =>

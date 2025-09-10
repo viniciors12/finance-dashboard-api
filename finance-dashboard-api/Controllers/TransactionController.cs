@@ -26,7 +26,7 @@ namespace sample_app_api.Controllers
         }
 
         [HttpGet("{transactionId}")]
-        public async Task<ActionResult<Transaction>> GetTransactionById(int transactionId)
+        public async Task<ActionResult<Transaction>> GetTransactionById(Guid transactionId)
         {
             var transaction = await _transactionService.GetTransactionAsync(transactionId);
 
@@ -41,12 +41,13 @@ namespace sample_app_api.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Transaction>>> AddTransaction([FromBody] Transaction transaction)
         {
-            var result = await _transactionService.AddTransactionAsync(transaction);
-            if (transaction == null || result == null) 
+            var response = await _transactionService.AddTransactionAsync(transaction);
+            if (transaction == null || response == null) 
             {
                 return BadRequest();
             }
-            return Ok(result);
+            var transactions = await _transactionService.GetAllTransactionsAsync();
+            return Ok(transactions);
         }
 
         [HttpPost("filteredTransactions")]
@@ -71,9 +72,11 @@ namespace sample_app_api.Controllers
         }
 
         [HttpDelete("{transactionId}")]
-        public async Task<ActionResult<List<Transaction>>> DeleteTransaction(int transactionId)
+        public async Task<ActionResult<List<Transaction>>> DeleteTransaction(Guid transactionId)
         {
-           return await _transactionService.DeleteTransactionAsync(transactionId);
+           await _transactionService.DeleteTransactionAsync(transactionId);
+           var results = await _transactionService.GetAllTransactionsAsync();
+           return Ok(results);
         }
     }
 }

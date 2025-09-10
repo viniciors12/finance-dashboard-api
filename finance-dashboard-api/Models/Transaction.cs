@@ -4,7 +4,7 @@ namespace FinanceDashboardApi.Models
 {
     public class Transaction
     {
-        public int TransactionId { get; set; }
+        public Guid TransactionId { get; set; }
 
         public TransactionType Type { get; set; }
 

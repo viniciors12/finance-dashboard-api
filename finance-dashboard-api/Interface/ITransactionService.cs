@@ -6,10 +6,10 @@ namespace FinanceDashboardApi.Interface
     public interface ITransactionService
     {
         Task<IEnumerable<Transaction>> GetAllTransactionsAsync();
-        Task<Transaction> GetTransactionAsync(int id);
-        Task<List<Transaction>> AddTransactionAsync(Transaction transaction);
+        Task<Transaction> GetTransactionAsync(Guid id);
+        Task<Transaction> AddTransactionAsync(Transaction transaction);
         Task<List<TransactionFilterResponse>> GetFilteredTransactions(TransactionFilterDto transactionFilter);
         Task<Transaction> UpdateTransactionAsync(Transaction transaction);
-        Task<List<Transaction>> DeleteTransactionAsync(int transactionId);
+        Task<Transaction> DeleteTransactionAsync(Guid transactionId);
     }
 }

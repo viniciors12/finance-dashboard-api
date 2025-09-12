@@ -39,6 +39,7 @@ namespace FinanceDashboardApi
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend", policy =>

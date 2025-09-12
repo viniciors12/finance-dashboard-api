@@ -42,7 +42,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configura el pipeline HTTP
 app.UseCors("AllowFrontend");
 app.UseSwagger();
 app.UseSwaggerUI();

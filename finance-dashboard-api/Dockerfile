@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy files of project
-COPY ["MyApp.csproj", "./"]
-RUN dotnet restore "./MyApp.csproj"
+COPY ["finance-dashboard-api.csproj", "./"]
+RUN dotnet restore "./finance-dashboard-api.csproj"
 
 # Copy code and build
 COPY . .
@@ -18,4 +18,4 @@ WORKDIR /var/task
 COPY --from=build /app/publish .
 
 # Define handler
-CMD ["MyApp::MyApp.LambdaEntryPoint::FunctionHandler"]
+CMD ["finance-dashboard-api::finance-dashboard-api.LambdaEntryPoint::FunctionHandler"]

@@ -18,5 +18,4 @@ WORKDIR /var/task
 COPY --from=build /app/publish .
 
 # Define handler
-CMD ["finance-dashboard-api::finance_dashboard_api.Lambda.LambdaEntryPoint"]
-
+CMD ["finance-dashboard-api::finance_dashboard_api.Lambda.LambdaEntryPoint::FunctionHandlerAsync"]

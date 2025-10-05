@@ -48,13 +48,18 @@ namespace finance_dashboard_api.Repository
 
             var grouped = incomes.Concat(expenses)
                 .GroupBy(t => new { t.Date.Year, t.Date.Month })
-                .Select(g => new TransactionFilterResponse
-                {
-                    Month = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month)} {g.Key.Year}",
-                    Income = g.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount),
-                    Expense = g.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount),
-                    Net = g.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount)
-                         - g.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount)
+                .ToList()
+                .Select(g => {
+                    var income = g.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
+                    var expense = g.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
+                    var net = income - expense >= 0 ? income - expense : 0;
+                    return new TransactionFilterResponse
+                    {
+                        Month = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month)} {g.Key.Year}",
+                        Income = income,
+                        Expense = expense,
+                        Net = net
+                    };
                 });
 
             return grouped.ToList();

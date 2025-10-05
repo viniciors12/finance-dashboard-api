@@ -1,23 +1,21 @@
-﻿using FinanceDashboardApi.Interface;
-using FinanceDashboardApi.Service;
-using FinanceDashboardApi.DBContext;
-using Microsoft.EntityFrameworkCore;
-using finance_dashboard_api.Repository;
-using finance_dashboard_api.Interface;
+﻿using Amazon;
 using Amazon.DynamoDBv2;
-using Amazon;
+using finance_dashboard_api.Interface;
+using finance_dashboard_api.Repository;
+using FinanceDashboardApi.Interface;
+using FinanceDashboardApi.Service;
 
 namespace FinanceDashboardApi
 {
     public class Startup
     {
         private readonly IConfiguration _config;
-        public Startup(IConfiguration configuration) 
-        { 
+        public Startup(IConfiguration configuration)
+        {
             _config = configuration;
         }
 
-        public void ConfigureServices(IServiceCollection services) 
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IAmazonDynamoDB>(sp =>
             {
@@ -29,46 +27,28 @@ namespace FinanceDashboardApi
             });
 
             services.AddScoped<ITransactionDynamoDB, TransactionDynamoDB>();
-
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
-            services.AddDbContext<FinanceDBContext>(options =>
-            options.UseSqlite("Data Source=finance.db"));
 
             services.AddControllers();
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
-
-
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowFrontend", policy =>
+                options.AddPolicy("AllowAll", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
 
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
             app.UseRouting();
-            app.UseCors("AllowFrontend");
-
+            app.UseCors("AllowAll");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
         }
-
     }
 }

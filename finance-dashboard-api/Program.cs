@@ -1,51 +1,21 @@
-﻿using Amazon;
-using Amazon.DynamoDBv2;
-using finance_dashboard_api.Interface;
-using finance_dashboard_api.Repository;
-using FinanceDashboardApi.DBContext;
-using FinanceDashboardApi.Interface;
-using FinanceDashboardApi.Service;
-using Microsoft.EntityFrameworkCore;
+﻿using FinanceDashboardApi;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
-
-builder.Services.AddSingleton<IAmazonDynamoDB>(sp =>
+namespace webApi
 {
-    var config = new AmazonDynamoDBConfig
+    public class Program
     {
-        RegionEndpoint = RegionEndpoint.USEast2
-    };
-    return new AmazonDynamoDBClient(config);
-});
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
 
-builder.Services.AddScoped<ITransactionDynamoDB, TransactionDynamoDB>();
-builder.Services.AddScoped<ITransactionService, TransactionService>();
-builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
-builder.Services.AddDbContext<FinanceDBContext>(options =>
-    options.UseSqlite("Data Source=finance.db"));
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    }
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
-var app = builder.Build();
-
-app.UseCors("AllowFrontend");
-app.UseSwagger();
-app.UseSwaggerUI();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
+}

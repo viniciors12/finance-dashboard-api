@@ -2,8 +2,10 @@
 using Amazon.DynamoDBv2;
 using finance_dashboard_api.Interface;
 using finance_dashboard_api.Repository;
+using finance_dashboard_api.Service;
 using FinanceDashboardApi.Interface;
 using FinanceDashboardApi.Service;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FinanceDashboardApi
 {
@@ -25,11 +27,14 @@ namespace FinanceDashboardApi
                 };
                 return new AmazonDynamoDBClient(config);
             });
-
+            services.AddHttpContextAccessor();
+            services.AddScoped<IUserContext, UserContext>();
             services.AddScoped<ITransactionDynamoDB, TransactionDynamoDB>();
             services.AddScoped<ITransactionService, TransactionService>();
-            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            // services.AddScoped<ITransactionRepository, TransactionRepository>(); sqlLite repo class
 
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
             services.AddControllers();
             services.AddCors(options =>
             {
@@ -38,10 +43,30 @@ namespace FinanceDashboardApi
                     policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
             });
+
+            var userPoolId = _config["Cognito:UserPoolId"];
+            var appClientId = _config["Cognito:AppClientId"];
+
+            services.AddAuthentication("Bearer")
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.Authority = $"https://cognito-idp.{RegionEndpoint.USEast2}.amazonaws.com/{userPoolId}";
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = true,
+                    ValidAudience = appClientId
+                };
+            });
+
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             app.UseRouting();
             app.UseCors("AllowAll");

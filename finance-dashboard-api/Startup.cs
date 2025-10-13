@@ -1,6 +1,7 @@
 ﻿using Amazon;
 using Amazon.DynamoDBv2;
 using finance_dashboard_api.Interface;
+using finance_dashboard_api.Middleware;
 using finance_dashboard_api.Repository;
 using finance_dashboard_api.Service;
 using FinanceDashboardApi.Interface;
@@ -69,6 +70,9 @@ namespace FinanceDashboardApi
             }
 
             app.UseRouting();
+            app.UseMiddleware<CognitoUserMiddleware>();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseCors("AllowAll");
             app.UseEndpoints(endpoints =>
             {

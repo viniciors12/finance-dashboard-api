@@ -25,6 +25,6 @@ jobs:
       - name: Build solution
         run: dotnet build --configuration Release
 
-      - name: Run tests
-        run: dotnet test ./finance-dashboard-api-tests/finance-dashboard-api-tests.csproj --configuration Debug --no-build --verbosity normal
+      - name: Run unit tests
+        run: dotnet test --configuration Debug --no-build --verbosity normal
 

@@ -1,0 +1,46 @@
+name: CI/CD - Build & Deploy Lambda
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push Docker image to ECR
+        env:
+          ECR_REGISTRY: 386495806187.dkr.ecr.us-east-2.amazonaws.com
+          ECR_REPOSITORY: finance-dashboard-api
+        run: |
+          docker build -t $ECR_REPOSITORY .
+          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Update AWS Lambda function
+        env:
+          ECR_REGISTRY: 386495806187.dkr.ecr.us-east-2.amazonaws.com
+          ECR_REPOSITORY: finance-dashboard-api
+        run: |
+          aws lambda update-function-code \
+            --function-name finance-dashboard-api \
+            --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:latest

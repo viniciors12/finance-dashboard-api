@@ -5,6 +5,13 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "finance-dashboard-api", "finance-dashboard-api\finance-dashboard-api.csproj", "{1AFDDF0C-3B3C-40F4-B744-DB626B5FF920}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "finance-dashboard-api-tests", "finance-dashboard-api-tests\finance-dashboard-api-tests.csproj", "{E699EBD0-8604-4AE6-BF17-E0ADE5494F19}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +22,10 @@ Global
 		{1AFDDF0C-3B3C-40F4-B744-DB626B5FF920}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AFDDF0C-3B3C-40F4-B744-DB626B5FF920}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AFDDF0C-3B3C-40F4-B744-DB626B5FF920}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E699EBD0-8604-4AE6-BF17-E0ADE5494F19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E699EBD0-8604-4AE6-BF17-E0ADE5494F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E699EBD0-8604-4AE6-BF17-E0ADE5494F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E699EBD0-8604-4AE6-BF17-E0ADE5494F19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

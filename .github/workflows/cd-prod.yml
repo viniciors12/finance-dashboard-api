@@ -1,4 +1,4 @@
-name: CI/CD - Build & Deploy Lambda
+name: Deploy finance-dashboard-api
 
 on:
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
           ECR_REGISTRY: 386495806187.dkr.ecr.us-east-2.amazonaws.com
           ECR_REPOSITORY: finance-dashboard-api
         run: |
-          docker build -t $ECR_REPOSITORY .
+          docker build -t $ECR_REPOSITORY -f ./finance-dashboard-api/Dockerfile ./finance-dashboard-api
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 

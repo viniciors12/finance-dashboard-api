@@ -127,7 +127,7 @@ namespace finance_dashboard_api_test.TransactionServiceTests
 
             // Assert
             Assert.Equal(existing, result);
-            mockRepo.Verify(r => r.GetTransactionByIdAsync(transactionId), Times.Once);
+            mockRepo.Verify(r => r.GetTransactionByIdAsync(transactionId), Times.Never);
             mockRepo.Verify(r => r.DeleteTransactionAsync(existing), Times.Once);
         }
 

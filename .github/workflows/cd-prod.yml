@@ -1,4 +1,4 @@
-name: CI/CD - Build & Deploy Lambda
+name: Deploy finance-dashboard-api
 
 on:
   workflow_dispatch:

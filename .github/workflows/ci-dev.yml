@@ -1,4 +1,4 @@
-name: CI for finance-dashboard-api
+name: Build and Test finance-dashboard-api
 
 on:
   push:

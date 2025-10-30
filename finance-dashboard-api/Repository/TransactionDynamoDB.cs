@@ -101,9 +101,9 @@ namespace finance_dashboard_api.Repository
                 Key = key
             };
 
-           await _dynamoDb.DeleteItemAsync(request);
+            await _dynamoDb.DeleteItemAsync(request);
 
-           return transaction;
+            return transaction;
 
         }
 
@@ -158,28 +158,31 @@ namespace finance_dashboard_api.Repository
 
             var incomes = transactions.Where(t => t.Type == TransactionType.Income);
             var expenses = transactions.Where(t => t.Type == TransactionType.Expense);
+            var savings = transactions.Where(t => t.Type == TransactionType.Savings);
 
             if (!string.IsNullOrWhiteSpace(filter.Category) && filter.Category != "All")
             {
                 expenses = expenses.Where(t => t.Category == filter.Category);
             }
 
-            return incomes.Concat(expenses)
+            return incomes
+            .Concat(expenses)
+            .Concat(savings)
             .GroupBy(t => new { t.Date.Year, t.Date.Month })
-            .Select(g => { 
-                    var income = g.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
-                    var expense = g.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
-                    var net = filter.Category == "All" && income - expense >= 0 ? income - expense : 0;
-                    var savings = filter.Category == "All" ? g.Where(t => t.Type == TransactionType.Savings).Sum(t => t.Amount) : 0;
-                    return new TransactionFilterResponse
-                    {
-                        Month = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month)} {g.Key.Year}",
-                        Income = income,
-                        Expense = expense,
-                        Net = net,
-                        Savings = savings
-                        
-                    }; 
+            .Select(g => {
+                var income = g.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
+                var expense = g.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
+                var savings = filter.Category == "All" ? g.Where(t => t.Type == TransactionType.Savings).Sum(t => t.Amount) : 0;
+                var net = filter.Category == "All" && (income - expense - savings) >= 0 ? (income - expense - savings) : 0;
+                return new TransactionFilterResponse
+                {
+                    Month = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month)} {g.Key.Year}",
+                    Income = income,
+                    Expense = expense,
+                    Net = net,
+                    Savings = savings
+
+                };
             })
             .ToList();
         }

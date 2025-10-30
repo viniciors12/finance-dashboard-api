@@ -170,12 +170,15 @@ namespace finance_dashboard_api.Repository
                     var income = g.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
                     var expense = g.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
                     var net = filter.Category == "All" && income - expense >= 0 ? income - expense : 0;
+                    var savings = filter.Category == "All" ? g.Where(t => t.Type == TransactionType.Savings).Sum(t => t.Amount) : 0;
                     return new TransactionFilterResponse
                     {
                         Month = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month)} {g.Key.Year}",
                         Income = income,
                         Expense = expense,
-                        Net = net
+                        Net = net,
+                        Savings = savings
+                        
                     }; 
             })
             .ToList();

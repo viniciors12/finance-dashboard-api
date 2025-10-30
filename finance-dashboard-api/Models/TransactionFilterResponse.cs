@@ -6,5 +6,7 @@
         public long Income { get; set; }
         public long Expense { get; set; }
         public long Net { get; set; }
+
+        public long Savings { get; set; }
     }
 }

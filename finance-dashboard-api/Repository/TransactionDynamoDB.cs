@@ -177,7 +177,7 @@ namespace finance_dashboard_api.Repository
                 return new TransactionFilterResponse
                 {
                     Month = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month)} {g.Key.Year}",
-                    Income = income,
+                    Income = income - savings,
                     Expense = expense,
                     Net = net,
                     Savings = savings
